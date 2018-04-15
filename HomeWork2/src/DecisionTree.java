@@ -19,18 +19,27 @@ public class DecisionTree implements Classifier {
 
 	}
 
-	private Node buildEntropyTree(Instances data) {
+	private void buildTree(Instances data) {
 
 	}
 
-	private double calcGain(Instances data){
+	private Node buildGiniTree(Instances data) {
+		return null;
+	}
 
-		if (mode){
-			calcEntropy(p1, p2);
-		}else {
-			calcGini(p1, p2);
-		}
+	private Node buildEntropyTree(Instances data) {
+		Node root = new Node();
 
+
+		return root;
+	}
+
+	private double calcInformationGain(Instances data, int attributeIndex){
+		return 0;
+	}
+
+	private double calcGiniGain(Instances data, int attributeIndex){
+		return 0;
 	}
 
 	private double calcGini(double p1, double p2) {
@@ -39,6 +48,10 @@ public class DecisionTree implements Classifier {
 
 	private double calcEntropy(double p1, double p2){
 		return -(p1 * Math.log(p1)/Math.log(2) + p2 * Math.log(p2)/Math.log(2));
+	}
+
+	private Instances[] splitDataByAttribute(Instances data, int attributeIndex) {
+		return null;
 	}
 
 
