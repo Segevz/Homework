@@ -104,7 +104,7 @@ public class DecisionTree implements Classifier {
                 parent.children[i].parent = parent;
                 parent.children[i].returnValue = calcReturnValue(subsetsByAttribute[i]);
                 parent.children[i].attributeIndex = -1;
-                subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
+                //subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
                 buildTree(subsetsByAttribute[i], parent.children[i]);
             }
         }
@@ -241,15 +241,16 @@ public class DecisionTree implements Classifier {
     @Override
     public double classifyInstance(Instance instance) {
         Node current = rootNode;
+        Instance temp = instance.copy(instance.toDoubleArray());
         try {
             do {
-                current = current.children[(int) instance.value(current.splitAttr)];
-            instance.deleteAttributeAt(current.parent.attributeIndex);
+                current = current.children[(int) temp.value(current.attributeIndex)];
+//                temp.setMissing(current.parent.attributeIndex);
             }
-            while (current.children != null && current.splitAttr != null && current.children[(int) instance.value(current.splitAttr)] != null);
+            while (current.children != null && current.attributeIndex != -1 && current.children[(int)temp.value(current.attributeIndex)] != null);
         }catch (Exception e) {
 //            System.err.println("[classifyInstance]" + instance.value(current.));
-            System.err.println("[classifyInstance]" + instance.toString());
+            System.err.println("[classifyInstance]" + temp.toString());
             System.err.println("[classifyInstance]" + current.splitAttr.toString());
             System.err.println("[classifyInstance]" + e);
         }

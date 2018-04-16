@@ -38,13 +38,13 @@ public class MainHW2 {
 		Instances trainingCancer = loadData("cancer_train.txt");
 		Instances testingCancer = loadData("cancer_test.txt");
 		Instances validationCancer = loadData("cancer_validation.txt");
-//		Instances tennisTraining = loadData("C:\\dev\\Homework\\HomeWork2\\tenis_train.txt");
+		Instances tennisTraining = loadData("C:\\dev\\Homework\\HomeWork2\\tenis_train.txt");
 
         //TODO: complete the Main method
 
 		DecisionTree entropyTree = new DecisionTree();
 		entropyTree.setImpurityMeasure(function.Entropy);
-//		entropyTree.buildClassifier(tennisTraining);
+		entropyTree.buildClassifier(tennisTraining);
 //		System.out.println(entropyTree.positivesRatio(testingCancer));
 //		Instances[] splitData = entropyTree.splitData(trainingCancer, 0);
 //		for (int i = 0; i < splitData.length; i++) {
@@ -54,8 +54,8 @@ public class MainHW2 {
 //			}
 //		}
 //		System.out.println(entropyTree.countClass(trainingCancer));
-		entropyTree.buildClassifier(trainingCancer);
-		System.out.println(entropyTree.calcAvgError(validationCancer));
+//		entropyTree.buildClassifier(trainingCancer);
+//		System.out.println(entropyTree.calcAvgError(validationCancer));
 //		System.out.println(entropyTree.toString());
 
 
