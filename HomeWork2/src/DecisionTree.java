@@ -17,6 +17,7 @@ class Node {
     int attributeIndex;
     double returnValue;
     Attribute splitAttr;
+    int depth;
 }
 
 public class DecisionTree implements Classifier {
@@ -31,10 +32,16 @@ public class DecisionTree implements Classifier {
     public void buildClassifier(Instances arg0) throws Exception {
         rootNode = new Node();
         rootNode.returnValue = calcReturnValue(arg0);
+        rootNode.depth = 0;
         buildTree(arg0, rootNode);
-        System.out.println(rootNode.attributeIndex);
-        System.out.println("Amount of children of root node: " + rootNode.children.length);
-        System.out.println("Amount of children of root node: " + rootNode.children.length);
+        //System.out.println(rootNode.attributeIndex);
+//        System.out.println("Amount of children of root node: " + rootNode.children.length);
+//        System.out.println("Amount of children of root node: " + rootNode.children.length);
+//        System.out.println(this.rootNode.children[1].parent.attributeIndex);
+////        System.out.println(this.rootNode.children[0].children[1].parent.attributeIndex);
+//        System.out.println(this.rootNode.children[2].children[0].parent.attributeIndex);
+//        System.out.println(this.rootNode.children[2].children[1].parent.attributeIndex);
+//        printTree(rootNode, 0);
     }
 
     private void buildTree(Instances data, Node current) {
@@ -92,6 +99,19 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
+    private void printTree (Node node, int n){
+        if (node.depth == n) {
+            System.out.println(node.splitAttr);
+            if (node.children != null) {
+                for (int i = 0; i < node.children.length; i++) {
+                    if (node.children[i] != null) {
+                        printTree(node.children[i], n + 1);
+                    }
+                }
+            }
+        }
+    }
+
     private void makeChildren(Instances data, Node parent) {
         if (parent.attributeIndex == -1) {
             return;
@@ -104,7 +124,8 @@ public class DecisionTree implements Classifier {
                 parent.children[i].parent = parent;
                 parent.children[i].returnValue = calcReturnValue(subsetsByAttribute[i]);
                 parent.children[i].attributeIndex = -1;
-                //subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
+                parent.children[i].depth = parent.depth + 1;
+//                subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
                 buildTree(subsetsByAttribute[i], parent.children[i]);
             }
         }
@@ -125,7 +146,17 @@ public class DecisionTree implements Classifier {
     }
 
     private double calcGiniGain(Instances data, int attributeIndex) {
-        return 0;
+        Attribute attribute = data.attribute(attributeIndex);
+        double gain = calcGini(positivesRatio(data));
+        Instances[] subsets = splitData(data, attributeIndex);
+        for (int i = 0; i < attribute.numValues(); i++) {
+            gain -= ((double)subsets[i].size() / data.size()) * calcGini(positivesRatio(subsets[i]));
+        }
+        return gain;
+    }
+
+    private double calcGini(double p) {
+        return 1 - (p * p + (1-p) * (1-p));
     }
 
     private double calcGini(double p1, double p2) {
@@ -248,13 +279,15 @@ public class DecisionTree implements Classifier {
 //                temp.setMissing(current.parent.attributeIndex);
             }
             while (current.children != null && current.attributeIndex != -1 && current.children[(int)temp.value(current.attributeIndex)] != null);
+            return current.returnValue;
         }catch (Exception e) {
 //            System.err.println("[classifyInstance]" + instance.value(current.));
             System.err.println("[classifyInstance]" + temp.toString());
-            System.err.println("[classifyInstance]" + current.splitAttr.toString());
+//            System.err.println("[classifyInstance]" + current.splitAttr.toString());
             System.err.println("[classifyInstance]" + e);
         }
-        return current.returnValue;
+//        return current.returnValue;
+    return 0;
     }
 
 

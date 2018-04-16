@@ -19,11 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainHW2.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainHW2.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MainHW2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="47" column="22" lean-forward="false" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
+            <state relative-caret-position="175">
+              <caret line="45" column="52" lean-forward="false" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -31,15 +31,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecisionTree.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DecisionTree.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="685">
-              <caret line="266" column="35" lean-forward="true" selection-start-line="266" selection-start-column="35" selection-end-line="266" selection-end-column="35" />
+            <state relative-caret-position="175">
+              <caret line="289" column="13" lean-forward="false" selection-start-line="289" selection-start-column="13" selection-end-line="289" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#10359#10360#0" expanded="true" />
-                <element signature="e#10386#10387#0" expanded="true" />
+                <element signature="e#5658#5659#0" expanded="true" />
+                <element signature="e#5708#5709#0" expanded="true" />
+                <element signature="e#11773#11774#0" expanded="true" />
+                <element signature="e#11800#11801#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,6 +56,8 @@
       <find>System.out</find>
       <find>attributeIndex</find>
       <find>instance</find>
+      <find>makechildren</find>
+      <find>printTree</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -64,8 +68,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/DecisionTree.java" />
         <option value="$PROJECT_DIR$/src/MainHW2.java" />
+        <option value="$PROJECT_DIR$/src/DecisionTree.java" />
       </list>
     </option>
   </component>
@@ -547,16 +551,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1523736678398</updated>
-      <workItem from="1523736680022" duration="34782000" />
+      <workItem from="1523736680022" duration="36357000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34782000" />
+    <option name="totallyTimeSpent" value="36357000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -642,24 +646,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
+    <entry file="file://$PROJECT_DIR$/src/MainHW2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="685">
-          <caret line="266" column="35" lean-forward="true" selection-start-line="266" selection-start-column="35" selection-end-line="266" selection-end-column="35" />
+        <state relative-caret-position="175">
+          <caret line="45" column="52" lean-forward="false" selection-start-line="45" selection-start-column="52" selection-end-line="45" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#10359#10360#0" expanded="true" />
-            <element signature="e#10386#10387#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MainHW2.java">
+    <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="47" column="22" lean-forward="false" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
+        <state relative-caret-position="175">
+          <caret line="289" column="13" lean-forward="false" selection-start-line="289" selection-start-column="13" selection-end-line="289" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#5658#5659#0" expanded="true" />
+            <element signature="e#5708#5709#0" expanded="true" />
+            <element signature="e#11773#11774#0" expanded="true" />
+            <element signature="e#11800#11801#0" expanded="true" />
           </folding>
         </state>
       </provider>

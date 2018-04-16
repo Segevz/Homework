@@ -43,8 +43,8 @@ public class MainHW2 {
         //TODO: complete the Main method
 
 		DecisionTree entropyTree = new DecisionTree();
-		entropyTree.setImpurityMeasure(function.Entropy);
-		entropyTree.buildClassifier(tennisTraining);
+		entropyTree.setImpurityMeasure(function.Gini);
+//		entropyTree.buildClassifier(tennisTraining);
 //		System.out.println(entropyTree.positivesRatio(testingCancer));
 //		Instances[] splitData = entropyTree.splitData(trainingCancer, 0);
 //		for (int i = 0; i < splitData.length; i++) {
@@ -53,9 +53,9 @@ public class MainHW2 {
 //				System.out.println(splitData[i].get(j));
 //			}
 //		}
-//		System.out.println(entropyTree.countClass(trainingCancer));
-//		entropyTree.buildClassifier(trainingCancer);
-//		System.out.println(entropyTree.calcAvgError(validationCancer));
+		System.out.println(entropyTree.countClass(trainingCancer));
+		entropyTree.buildClassifier(trainingCancer);
+		System.out.println(entropyTree.calcAvgError(validationCancer));
 //		System.out.println(entropyTree.toString());
 
 
