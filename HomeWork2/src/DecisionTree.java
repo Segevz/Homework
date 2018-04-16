@@ -5,12 +5,18 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.unsupervised.instance.RemoveWithValues;
 
+enum function {
+	Gini,
+	Entropy
+}
+
 class Node {
 	Node[] children;
 	Node parent;
 	int attributeIndex;
 	double returnValue;
 	int dataSize;
+	function impurityMeasure;
 }
 
 public class DecisionTree implements Classifier {
@@ -18,22 +24,55 @@ public class DecisionTree implements Classifier {
 
 	@Override
 	public void buildClassifier(Instances arg0) throws Exception {
+		double entropyError, giniError;
+		Node entropyRoot = new Node();
+		Node giniRoot = new Node();
+		entropyRoot.dataSize = giniRoot.dataSize = arg0.size();
+		entropyRoot.returnValue = giniRoot.returnValue = calcReturnValue(arg0);
+		entropyRoot.impurityMeasure = function.Entropy;
+		giniRoot.impurityMeasure = function.Gini;
+		BuildTree(arg0, entropyRoot);
+		BuildTree(arg0, giniRoot);
+		rootNode = entropyRoot;
+		entropyError = calcAvgError(arg0);
+		rootNode = giniRoot;
+		giniError = calcAvgError(arg0);
+		rootNode = giniError < entropyError ? giniRoot : entropyRoot;
+	}
 
+	private void BuildTree(Instances data, Node current) {
+		if (!checkDichotomy(data) || data.numAttributes() < 2){
+			return;
+		}
+		double maxGain = 0, currentGain;
+		int bestAttribute = -1;
+		for (int i = 0; i < data.numAttributes() - 1; i++) {
+			currentGain = calcGain(data, i, current.impurityMeasure);
+			if (currentGain > maxGain) {
+				maxGain = currentGain;
+				bestAttribute = i;
+			}
+		}
+		current.attributeIndex = bestAttribute;
+		makeChildren(data, current, current.impurityMeasure);
 	}
 
 	private void buildTree(Instances data) {
-		int entropyError, giniError
+		double entropyError, giniError;
 		Node rootEntropy = new Node();
 		Node rootGini = new Node();
 		buildEntropyTree(data, rootEntropy);
 		buildGiniTree(data, rootGini);
 		rootNode = rootEntropy;
-		entropyError = calcAvgError()
+		entropyError = calcAvgError(data);
+		rootNode = rootGini;
+		giniError = calcAvgError(data);
+		rootNode = giniError > entropyError ? rootGini : rootEntropy;
 
 	}
 
 	private void buildGiniTree(Instances data, Node current) {
-		if (!checkDichotomy(data)){
+		if (!checkDichotomy(data) || data.numAttributes() < 2){
 			return;
 		}
 		int bestAttribute = -1;
@@ -46,12 +85,12 @@ public class DecisionTree implements Classifier {
 			}
 		}
 		current.attributeIndex = bestAttribute;
-		makeChildren(data, current, true);
+		makeChildren(data, current, function.Gini);
 	}
 
 
 	private void buildEntropyTree(Instances data, Node current) {
-		if (!checkDichotomy(data)){
+		if (!checkDichotomy(data) || data.numAttributes() < 2){
 			return;
 		}
 		int bestAttribute = -1;
@@ -64,14 +103,22 @@ public class DecisionTree implements Classifier {
 			}
 		}
 		current.attributeIndex = bestAttribute;
-		makeChildren(data, current, false);
+		makeChildren(data, current, function.Entropy);
 	}
 
 	private boolean checkDichotomy(Instances data) {
-		return false;
+		Instance previous = data.get(0);
+		Instance current;
+		for (int i = 1; i < data.size(); i++) {
+			current = data.get(i);
+			if (current.classValue() != previous.classValue()){
+				return false;
+			}
+		}
+		return true;
 	}
 
-	private void makeChildren(Instances data,Node parent, boolean impurityMeasure){
+	private void makeChildren(Instances data, Node parent, function mode ){
 		if (parent.attributeIndex == -1){
 			return;
 		}
@@ -81,16 +128,22 @@ public class DecisionTree implements Classifier {
 			parent.children[i].parent = parent;
 			parent.children[i].returnValue = calcReturnValue(subsetsByAttribute[i]);
 			parent.children[i].dataSize = subsetsByAttribute[i].size();
-			if (impurityMeasure) {
-				buildGiniTree(subsetsByAttribute[i], parent.children[i]);
-			}else {
-				buildEntropyTree(subsetsByAttribute[i], parent.children[i]);
-			}
+			BuildTree(subsetsByAttribute[i], parent.children[i]);
 		}
 	}
 
 	private double calcInformationGain(Instances data, int attributeIndex){
 		return 0;
+	}
+
+	private double calcGain(Instances data, int attributeIndex, function mode){
+		switch (mode) {
+			case Gini:
+				return calcGiniGain(data, attributeIndex);
+			case Entropy:
+				return calcInformationGain(data, attributeIndex);
+		}
+		return -1;
 	}
 
 	private double calcGiniGain(Instances data, int attributeIndex){
@@ -154,7 +207,8 @@ public class DecisionTree implements Classifier {
 	}
 
 	private Instances[] splitData(Instances data, int attributeIndex) {
-		RemoveWithValues filter = new RemoveWithValues();
+		RemoveWithValues splitFilter = new RemoveWithValues();
+
 		String valueIndex = "";
 		String[] options = new String[5];
 		Instances[] splitData = new Instances[data.attribute(attributeIndex).numValues()];
@@ -166,9 +220,10 @@ public class DecisionTree implements Classifier {
 		for (int i = 0; i < data.attribute(attributeIndex).numValues(); i++) {
 			options[3] = Integer.toString(i);
 			try {
-				filter.setOptions(options);
-				filter.setInputFormat(data);
-				splitData[i] = filter.useFilter(data, filter);
+				splitFilter.setOptions(options);
+				splitFilter.setInputFormat(data);
+				splitData[i] = splitFilter.useFilter(data, splitFilter);
+				splitData[i].deleteAttributeAt(attributeIndex);
 			} catch (Exception e) {
 				System.err.println("Error : " + e);
 			}
@@ -205,7 +260,7 @@ public class DecisionTree implements Classifier {
 		return counter > 0 ? 1 : 0;
 	}
 
-	private double calcAvgError(Instances data) {
+	public double calcAvgError(Instances data) {
 		double countErrors = 0;
     	for (int i = 0; i < data.size(); i++) {
 			countErrors += classifyInstance(data.get(i)) == data.get(i).classValue() ? 1 : 0;
