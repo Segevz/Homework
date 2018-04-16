@@ -41,7 +41,7 @@ public class DecisionTree implements Classifier {
 ////        System.out.println(this.rootNode.children[0].children[1].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[0].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[1].parent.attributeIndex);
-//        printTree(rootNode, 0);
+        printTree(rootNode);
     }
 
     private void buildTree(Instances data, Node current) {
@@ -99,14 +99,13 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
-    private void printTree (Node node, int n){
-        if (node.depth == n) {
-            System.out.println(node.splitAttr);
-            if (node.children != null) {
-                for (int i = 0; i < node.children.length; i++) {
-                    if (node.children[i] != null) {
-                        printTree(node.children[i], n + 1);
-                    }
+    private void printTree(Node node) {
+        System.out.println("Returning value: " + node.returnValue);
+        if (node.children != null) {
+            for (int i = 0; i < node.children.length; i++) {
+                if (node.children[i] != null) {
+                    System.out.println("If attribute" + node.attributeIndex + " = " + i);
+                    printTree(node.children[i]);
                 }
             }
         }
@@ -150,13 +149,13 @@ public class DecisionTree implements Classifier {
         double gain = calcGini(positivesRatio(data));
         Instances[] subsets = splitData(data, attributeIndex);
         for (int i = 0; i < attribute.numValues(); i++) {
-            gain -= ((double)subsets[i].size() / data.size()) * calcGini(positivesRatio(subsets[i]));
+            gain -= ((double) subsets[i].size() / data.size()) * calcGini(positivesRatio(subsets[i]));
         }
         return gain;
     }
 
     private double calcGini(double p) {
-        return 1 - (p * p + (1-p) * (1-p));
+        return 1 - (p * p + (1 - p) * (1 - p));
     }
 
     private double calcGini(double p1, double p2) {
@@ -189,8 +188,8 @@ public class DecisionTree implements Classifier {
         for (int i = 0; i < attribute.numValues(); i++) {
 //                System.out.println("|S" + i + "|/|S| is " + (double)subsets[i].size() / data.size());
 //                System.out.println("H(S" + i + ") is " + entropyFormula(positivesRatio(subsets[i])));
-                //System.out.println(((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i])));
-                gain -= ((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i]));
+            //System.out.println(((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i])));
+            gain -= ((double) subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i]));
         }
 //        System.out.println("Gain is " + gain);
         return gain;
@@ -253,9 +252,9 @@ public class DecisionTree implements Classifier {
         for (int i = 0; i < data.attribute(attributeIndex).numValues(); i++) {
             try {
                 options[0] = "-C";   // Choose attribute to be used for selection
-                options[1] = String.valueOf(attributeIndex+1); // Attribute number
+                options[1] = String.valueOf(attributeIndex + 1); // Attribute number
                 options[2] = "-L";
-                options[3] = String.valueOf(i+1);
+                options[3] = String.valueOf(i + 1);
                 options[4] = "-V";
                 splitFilter.setOptions(options);
                 splitFilter.setInputFormat(data);
@@ -274,22 +273,28 @@ public class DecisionTree implements Classifier {
         Node current = rootNode;
         Instance temp = instance.copy(instance.toDoubleArray());
         try {
-            do {
+            while (current != null && current.children != null && current.attributeIndex != -1 && current.children[(int) temp.value(current.attributeIndex)] != null) {
                 current = current.children[(int) temp.value(current.attributeIndex)];
-//                temp.setMissing(current.parent.attributeIndex);
+
             }
-            while (current.children != null && current.attributeIndex != -1 && current.children[(int)temp.value(current.attributeIndex)] != null);
+//            do {
+//                if (current == null) {
+//                    return 0.0;
+//                }
+//                current = current.children[(int) temp.value(current.attributeIndex)];
+////                temp.setMissing(current.parent.attributeIndex);
+//            }
+//            while (current != null && current.children != null && current.attributeIndex != -1 && current.children[(int)temp.value(current.attributeIndex)] != null);
             return current.returnValue;
-        }catch (Exception e) {
+        } catch (Exception e) {
 //            System.err.println("[classifyInstance]" + instance.value(current.));
             System.err.println("[classifyInstance]" + temp.toString());
 //            System.err.println("[classifyInstance]" + current.splitAttr.toString());
             System.err.println("[classifyInstance]" + e);
         }
 //        return current.returnValue;
-    return 0;
+        return 0;
     }
-
 
 
     private double calcReturnValue(Instances data) {
@@ -320,7 +325,7 @@ public class DecisionTree implements Classifier {
         return null;
     }
 
-    public String toString(Instances data){
+    public String toString(Instances data) {
         return null;
     }
 

@@ -43,7 +43,7 @@ public class MainHW2 {
         //TODO: complete the Main method
 
 		DecisionTree entropyTree = new DecisionTree();
-		entropyTree.setImpurityMeasure(function.Gini);
+		entropyTree.setImpurityMeasure(function.Entropy);
 //		entropyTree.buildClassifier(tennisTraining);
 //		System.out.println(entropyTree.positivesRatio(testingCancer));
 //		Instances[] splitData = entropyTree.splitData(trainingCancer, 0);
