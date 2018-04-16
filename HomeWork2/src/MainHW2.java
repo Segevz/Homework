@@ -1,9 +1,10 @@
+import weka.core.Instances;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import weka.core.Instances;
 
 public class MainHW2 {
 
@@ -39,5 +40,12 @@ public class MainHW2 {
 		Instances validationCancer = loadData("cancer_validation.txt");
 		
         //TODO: complete the Main method
+
+		DecisionTree entropyTree = new DecisionTree();
+		entropyTree.setImpurityMeasure(function.Entropy);
+		System.out.println(entropyTree.positivesRatio(testingCancer));
+		System.out.println(entropyTree.countClass(trainingCancer));
+		entropyTree.buildClassifier(trainingCancer);
+		System.out.println(entropyTree.calcAvgError(validationCancer));
 	}
 }
