@@ -44,6 +44,13 @@ public class MainHW2 {
 		DecisionTree entropyTree = new DecisionTree();
 		entropyTree.setImpurityMeasure(function.Entropy);
 		System.out.println(entropyTree.positivesRatio(testingCancer));
+//		Instances[] splitData = entropyTree.splitData(trainingCancer, 0);
+//		for (int i = 0; i < splitData.length; i++) {
+//			System.out.println("For attribute value of" + trainingCancer.attribute(0).value(i));
+//			for (int j = 0; j < splitData[i].size(); j++) {
+//				System.out.println(splitData[i].get(j));
+//			}
+//		}
 		System.out.println(entropyTree.countClass(trainingCancer));
 		entropyTree.buildClassifier(trainingCancer);
 		System.out.println(entropyTree.calcAvgError(validationCancer));

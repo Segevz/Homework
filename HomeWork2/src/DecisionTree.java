@@ -47,7 +47,7 @@ public class DecisionTree implements Classifier {
             }
         }
         current.attributeIndex = bestAttribute;
-        System.out.println(bestAttribute);
+        System.out.println("best attribute is " + bestAttribute);
         makeChildren(data, current, impurityMeasure);
     }
 
@@ -66,6 +66,9 @@ public class DecisionTree implements Classifier {
     }
 
     private boolean checkDichotomy(Instances data) {
+        if (data.size() == 0) {
+            return true;
+        }
         Instance previous = data.get(0);
         Instance current;
         for (int i = 1; i < data.size(); i++) {
@@ -139,17 +142,19 @@ public class DecisionTree implements Classifier {
         double gain = entropyFormula(positivesRatio(data));
         Instances[] subsets = splitData(data, indexAttribute);
         for (int i = 0; i < attribute.numValues(); i++) {
-            if (subsets[i] != null) {
 //                System.out.println("|S" + i + "|/|S| is :" + (double)subsets[i].size() / data.size());
 //                System.out.println("H(S" + i + ") is " + entropyFormula(positivesRatio(subsets[i])));
                 //System.out.println(((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i])));
                 gain -= ((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i]));
-            }
+            System.out.println("Gain is " + gain);
         }
         return gain;
     }
 
     public double positivesRatio(Instances data) {
+        if (data.size() == 0) {
+            return 0;
+        }
         int countPositives = 0;
         for (int i = 0; i < data.size(); i++) {
 //            if (data.get(i).classAttribute().equals(data.classAttribute().value(0))) {
@@ -187,16 +192,16 @@ public class DecisionTree implements Classifier {
     }
 
     private double entropyFormula(double p) {
-        if (p == 0) {
+        if (p == 0 || p == 1) {
             return 1;
         }
         return -(p * Math.log(p) / Math.log(2) + (1 - p) * Math.log(1 - p) / Math.log(2));
     }
 
-    private Instances[] splitData(Instances data, int attributeIndex) {
+    public Instances[] splitData(Instances data, int attributeIndex) {
         RemoveWithValues splitFilter = new RemoveWithValues();
 
-        String[] options = new String[4];
+        String[] options = new String[5];
         Instances[] splitData = new Instances[data.attribute(attributeIndex).numValues()];
 
 
@@ -206,12 +211,11 @@ public class DecisionTree implements Classifier {
                 options[1] = String.valueOf(attributeIndex+1); // Attribute number
                 options[2] = "-L";
                 options[3] = String.valueOf(i+1);
-                splitFilter.setInvertSelection(true);
+                options[4] = "-V";
                 splitFilter.setOptions(options);
                 splitFilter.setInputFormat(data);
                 splitData[i] = Filter.useFilter(data, splitFilter);
 //                splitData[i].deleteAttributeAt(attributeIndex);
-                System.out.println(splitData[i].size());
             } catch (Exception e) {
                 System.err.println("[splitData] Error : " + e);
             }
