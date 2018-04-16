@@ -16,6 +16,7 @@ class Node {
     Node parent;
     int attributeIndex;
     double returnValue;
+    Attribute splitAttr;
 }
 
 public class DecisionTree implements Classifier {
@@ -31,6 +32,9 @@ public class DecisionTree implements Classifier {
         rootNode = new Node();
         rootNode.returnValue = calcReturnValue(arg0);
         buildTree(arg0, rootNode);
+        System.out.println(rootNode.attributeIndex);
+        System.out.println("Amount of children of root node: " + rootNode.children.length);
+        System.out.println("Amount of children of root node: " + rootNode.children.length);
     }
 
     private void buildTree(Instances data, Node current) {
@@ -41,14 +45,21 @@ public class DecisionTree implements Classifier {
         int bestAttribute = -1;
         for (int i = 0; i < data.numAttributes() - 1; i++) {
             currentGain = calcGain(data, i, impurityMeasure);
+//            System.out.println("**************************************");
             if (currentGain > maxGain) {
                 maxGain = currentGain;
                 bestAttribute = i;
             }
         }
+        if (maxGain == 0) {
+            return;
+        }
         current.attributeIndex = bestAttribute;
-        System.out.println("best attribute is " + bestAttribute);
-        makeChildren(data, current, impurityMeasure);
+        current.splitAttr = data.attribute(bestAttribute);
+        System.out.println("best attribute is " + data.attribute(bestAttribute).toString());
+//        System.out.println("**************************************");
+//        System.out.println("**************************************");
+        makeChildren(data, current);
     }
 
     private void buildTree(Instances data) {
@@ -81,17 +92,18 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
-    private void makeChildren(Instances data, Node parent, function mode) {
+    private void makeChildren(Instances data, Node parent) {
         if (parent.attributeIndex == -1) {
             return;
         }
         Instances[] subsetsByAttribute = splitData(data, parent.attributeIndex);
         parent.children = new Node[data.attribute(parent.attributeIndex).numValues()];
         for (int i = 0; i < data.attribute(parent.attributeIndex).numValues(); i++) {
-            if (subsetsByAttribute[i] != null) {
+            if (subsetsByAttribute[i].size() > 0) {
                 parent.children[i] = new Node();
                 parent.children[i].parent = parent;
                 parent.children[i].returnValue = calcReturnValue(subsetsByAttribute[i]);
+                parent.children[i].attributeIndex = -1;
                 subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
                 buildTree(subsetsByAttribute[i], parent.children[i]);
             }
@@ -140,14 +152,16 @@ public class DecisionTree implements Classifier {
         Attribute attribute = data.attribute(indexAttribute);
         double positivesRatio = positivesRatio(data);
         double gain = entropyFormula(positivesRatio(data));
+//        System.out.println("data size is " + data.size());
+//        System.out.println("H(S) is " + gain);
         Instances[] subsets = splitData(data, indexAttribute);
         for (int i = 0; i < attribute.numValues(); i++) {
-//                System.out.println("|S" + i + "|/|S| is :" + (double)subsets[i].size() / data.size());
+//                System.out.println("|S" + i + "|/|S| is " + (double)subsets[i].size() / data.size());
 //                System.out.println("H(S" + i + ") is " + entropyFormula(positivesRatio(subsets[i])));
                 //System.out.println(((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i])));
                 gain -= ((double)subsets[i].size() / data.size()) * entropyFormula(positivesRatio(subsets[i]));
-            System.out.println("Gain is " + gain);
         }
+//        System.out.println("Gain is " + gain);
         return gain;
     }
 
@@ -193,7 +207,7 @@ public class DecisionTree implements Classifier {
 
     private double entropyFormula(double p) {
         if (p == 0 || p == 1) {
-            return 1;
+            return 0;
         }
         return -(p * Math.log(p) / Math.log(2) + (1 - p) * Math.log(1 - p) / Math.log(2));
     }
@@ -227,13 +241,21 @@ public class DecisionTree implements Classifier {
     @Override
     public double classifyInstance(Instance instance) {
         Node current = rootNode;
-        double valueIndex;
-        while (current.children != null) {
-            valueIndex = instance.value(current.attributeIndex);
-            current = current.children[(int) valueIndex];
+        try {
+            do {
+                current = current.children[(int) instance.value(current.splitAttr)];
+            instance.deleteAttributeAt(current.parent.attributeIndex);
+            }
+            while (current.children != null && current.splitAttr != null && current.children[(int) instance.value(current.splitAttr)] != null);
+        }catch (Exception e) {
+//            System.err.println("[classifyInstance]" + instance.value(current.));
+            System.err.println("[classifyInstance]" + instance.toString());
+            System.err.println("[classifyInstance]" + current.splitAttr.toString());
+            System.err.println("[classifyInstance]" + e);
         }
         return current.returnValue;
     }
+
 
 
     private double calcReturnValue(Instances data) {
@@ -261,6 +283,10 @@ public class DecisionTree implements Classifier {
     @Override
     public Capabilities getCapabilities() {
         // Don't change
+        return null;
+    }
+
+    public String toString(Instances data){
         return null;
     }
 

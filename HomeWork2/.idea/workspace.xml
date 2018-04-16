@@ -22,8 +22,8 @@
       <file leaf-file-name="MainHW2.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MainHW2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="54" column="52" lean-forward="true" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+            <state relative-caret-position="704">
+              <caret line="57" column="4" lean-forward="false" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -34,10 +34,12 @@
       <file leaf-file-name="DecisionTree.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2090">
-              <caret line="22" column="37" lean-forward="true" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
+            <state relative-caret-position="75">
+              <caret line="243" column="13" lean-forward="true" selection-start-line="243" selection-start-column="13" selection-end-line="243" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#10297#10298#0" expanded="true" />
+                <element signature="e#10324#10325#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -544,12 +546,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1523736678398</updated>
-      <workItem from="1523736680022" duration="25583000" />
+      <workItem from="1523736680022" duration="33944000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25583000" />
+    <option name="totallyTimeSpent" value="33944000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="0" />
@@ -564,7 +566,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997735" sideWeight="0.50429183" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295583" sideWeight="0.49785408" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295583" sideWeight="0.49785408" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -577,7 +579,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997735" sideWeight="0.49570817" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3997735" sideWeight="0.49570817" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="combo" />
@@ -597,12 +599,30 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/DecisionTree.java</url>
-          <line>145</line>
+          <line>249</line>
           <properties />
-          <option name="timeStamp" value="47" />
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/DecisionTree.java</url>
+          <line>251</line>
+          <properties />
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/DecisionTree.java</url>
+          <line>248</line>
+          <properties />
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/DecisionTree.java</url>
+          <line>245</line>
+          <properties />
+          <option name="timeStamp" value="69" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="52" />
+      <option name="time" value="70" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -649,8 +669,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MainHW2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="54" column="52" lean-forward="true" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+        <state relative-caret-position="704">
+          <caret line="57" column="4" lean-forward="false" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -659,10 +679,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2090">
-          <caret line="22" column="37" lean-forward="true" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
+        <state relative-caret-position="75">
+          <caret line="243" column="13" lean-forward="true" selection-start-line="243" selection-start-column="13" selection-end-line="243" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#10297#10298#0" expanded="true" />
+            <element signature="e#10324#10325#0" expanded="true" />
           </folding>
         </state>
       </provider>
