@@ -41,7 +41,7 @@ public class DecisionTree implements Classifier {
 ////        System.out.println(this.rootNode.children[0].children[1].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[0].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[1].parent.attributeIndex);
-        printTree(rootNode);
+        printTree(rootNode, 0);
     }
 
     private void buildTree(Instances data, Node current) {
@@ -99,13 +99,17 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
-    private void printTree(Node node) {
-        System.out.println("Returning value: " + node.returnValue);
+    private void printTree(Node node, int n) {
+        String spacer = "";
+        for (int i = 0; i < n; i++) {
+            spacer += "  ";
+        }
+        System.out.println(spacer + "Returning value: " + node.returnValue);
         if (node.children != null) {
             for (int i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
-                    System.out.println("If attribute" + node.attributeIndex + " = " + i);
-                    printTree(node.children[i]);
+                    System.out.println(spacer + "If attribute" + node.attributeIndex + " = " + i);
+                    printTree(node.children[i], n+1);
                 }
             }
         }
@@ -308,9 +312,29 @@ public class DecisionTree implements Classifier {
     public double calcAvgError(Instances data) {
         double countErrors = 0;
         for (int i = 0; i < data.size(); i++) {
-            countErrors += classifyInstance(data.get(i)) == data.get(i).classValue() ? 1 : 0;
+            countErrors += classifyInstance(data.get(i)) == data.get(i).classValue() ? 0 : 1;
         }
         return countErrors / data.size();
+    }
+
+    private double calcChiSquare(Instances data, int attributeIndex){
+        double PY0 = positivesRatio(data);
+        double PY1 = PY0 - 1;
+        int Df, pf, nf;
+        double E0, E1;
+        double X2 = 0;
+        Instances[] dividedData = splitData(data, attributeIndex);
+        for (int i = 0; i < dividedData.length; i++) {
+            if (dividedData[i].size() > 0){
+                Df = dividedData[i].size();
+                pf = countClass(dividedData[i]);
+                nf = Df - pf;
+                E0 = Df * PY0;
+                E1 = Df * PY1;
+                X2 += Math.pow(pf - E0, 2)/E0 + Math.pow(nf - E1, 2)/E1;
+            }
+        }
+        return X2;
     }
 
     @Override

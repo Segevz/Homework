@@ -34,14 +34,14 @@
       <file leaf-file-name="DecisionTree.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="307" column="18" lean-forward="false" selection-start-line="307" selection-start-column="18" selection-end-line="307" selection-end-column="18" />
+            <state relative-caret-position="245">
+              <caret line="333" column="72" lean-forward="false" selection-start-line="333" selection-start-column="72" selection-end-line="333" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5681#5682#0" expanded="true" />
-                <element signature="e#5735#5736#0" expanded="true" />
-                <element signature="e#12195#12196#0" expanded="true" />
-                <element signature="e#12222#12223#0" expanded="true" />
+                <element signature="e#5818#5819#0" expanded="true" />
+                <element signature="e#5872#5873#0" expanded="true" />
+                <element signature="e#13019#13020#0" expanded="true" />
+                <element signature="e#13046#13047#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -57,8 +57,9 @@
       <find>attributeIndex</find>
       <find>instance</find>
       <find>makechildren</find>
-      <find>printTree</find>
       <find>entropyformula</find>
+      <find>printTree</find>
+      <find>calcChi</find>
     </findStrings>
   </component>
   <component name="GradleLocalSettings">
@@ -69,8 +70,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/DecisionTree.java" />
         <option value="$PROJECT_DIR$/src/MainHW2.java" />
+        <option value="$PROJECT_DIR$/src/DecisionTree.java" />
       </list>
     </option>
   </component>
@@ -552,12 +553,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1523736678398</updated>
-      <workItem from="1523736680022" duration="39107000" />
+      <workItem from="1523736680022" duration="42796000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39107000" />
+    <option name="totallyTimeSpent" value="42796000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="0" />
@@ -605,7 +606,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/DecisionTree.java</url>
-          <line>288</line>
+          <line>292</line>
           <properties />
           <option name="timeStamp" value="76" />
         </line-breakpoint>
@@ -667,14 +668,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DecisionTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="307" column="18" lean-forward="false" selection-start-line="307" selection-start-column="18" selection-end-line="307" selection-end-column="18" />
+        <state relative-caret-position="245">
+          <caret line="333" column="72" lean-forward="false" selection-start-line="333" selection-start-column="72" selection-end-line="333" selection-end-column="72" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5681#5682#0" expanded="true" />
-            <element signature="e#5735#5736#0" expanded="true" />
-            <element signature="e#12195#12196#0" expanded="true" />
-            <element signature="e#12222#12223#0" expanded="true" />
+            <element signature="e#5818#5819#0" expanded="true" />
+            <element signature="e#5872#5873#0" expanded="true" />
+            <element signature="e#13019#13020#0" expanded="true" />
+            <element signature="e#13046#13047#0" expanded="true" />
           </folding>
         </state>
       </provider>
