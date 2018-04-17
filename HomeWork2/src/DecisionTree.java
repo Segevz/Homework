@@ -23,6 +23,35 @@ class Node {
 public class DecisionTree implements Classifier {
     private Node rootNode;
     private function impurityMeasure;
+    private double pValue;
+    private final double[][] CHI_SQUARE_DISTRIBUTION = {
+            //p: 1,  0.75,   0.5,  0.25,  0.05, 0.005
+            {0, 0.102, 0.455, 1.323, 3.841, 7.879}, // deg 1
+            {0, 0.575, 1.386, 2.773, 5.991, 10.597}, // deg 2
+            {0, 1.213, 2.366, 4.108, 7.815, 12.838}, // deg 3
+            {0, 1.923, 3.357, 5.385, 9.488, 14.860}, // deg 4
+            {0, 2.675, 4.351, 6.626, 11.070, 16.750}, // deg 5
+            {0, 3.455, 5.348, 7.841, 12.592, 18.548}, // deg 6
+            {0, 4.255, 6.346, 9.037, 14.067, 20.278}, // deg 7
+            {0, 5.071, 7.344, 10.219, 15.507, 21.955}, // deg 8
+            {0, 5.899, 8.343, 11.389, 16.919, 23.589}, // deg 9
+            {0, 6.737, 9.342, 12.549, 18.307, 25.188}, // deg 10
+            {0, 7.584, 10.341, 13.701, 19.675, 26.757} // deg 11
+    };
+    public final double[] pIndex = {1, 0.75, 0.5, 0.25, 0.05, 0.005};
+
+    public void setpValue(double pValue) {
+        this.pValue = pValue;
+    }
+
+    private int returnPIndex(double pValue){
+        for (int i = 0; i < pIndex.length; i++) {
+            if (pIndex[i] == pValue){
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public void setImpurityMeasure(function mode) {
         this.impurityMeasure = mode;
@@ -41,7 +70,7 @@ public class DecisionTree implements Classifier {
 ////        System.out.println(this.rootNode.children[0].children[1].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[0].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[1].parent.attributeIndex);
-        printTree(rootNode, 0);
+        //printTree(rootNode, 0);
     }
 
     private void buildTree(Instances data, Node current) {
@@ -58,15 +87,20 @@ public class DecisionTree implements Classifier {
                 bestAttribute = i;
             }
         }
-        if (maxGain == 0) {
-            return;
+        if ( pValue <= 0 ) {
+            pValue = 1 ;
         }
-        current.attributeIndex = bestAttribute;
-        current.splitAttr = data.attribute(bestAttribute);
-        System.out.println("best attribute is " + data.attribute(bestAttribute).toString());
-//        System.out.println("**************************************");
-//        System.out.println("**************************************");
-        makeChildren(data, current);
+        if (maxGain > 0 ) {//&&  {
+            double[] chiSquare = calcChiSquare(data, bestAttribute);
+            if (chiSquare[0] > CHI_SQUARE_DISTRIBUTION[(int)chiSquare[1] - 1][returnPIndex(pValue)]) {
+                current.attributeIndex = bestAttribute;
+                current.splitAttr = data.attribute(bestAttribute);
+//            System.out.println("best attribute is " + data.attribute(bestAttribute).toString());
+                //        System.out.println("**************************************");
+                //        System.out.println("**************************************");
+                makeChildren(data, current);
+            }
+        }
     }
 
     private void buildTree(Instances data) {
@@ -99,7 +133,7 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
-    private void printTree(Node node, int n) {
+    public void printTree(Node node, int n) {
         String spacer = "";
         for (int i = 0; i < n; i++) {
             spacer += "  ";
@@ -317,10 +351,10 @@ public class DecisionTree implements Classifier {
         return countErrors / data.size();
     }
 
-    private double calcChiSquare(Instances data, int attributeIndex){
+    private double[] calcChiSquare(Instances data, int attributeIndex){
         double PY0 = positivesRatio(data);
-        double PY1 = PY0 - 1;
-        int Df, pf, nf;
+        double PY1 = 1- PY0 ;
+        int Df, pf, nf, countNonEmpty = 0;
         double E0, E1;
         double X2 = 0;
         Instances[] dividedData = splitData(data, attributeIndex);
@@ -332,9 +366,10 @@ public class DecisionTree implements Classifier {
                 E0 = Df * PY0;
                 E1 = Df * PY1;
                 X2 += Math.pow(pf - E0, 2)/E0 + Math.pow(nf - E1, 2)/E1;
+                countNonEmpty++;
             }
         }
-        return X2;
+        return new double[] {X2, (double)countNonEmpty};
     }
 
     @Override
