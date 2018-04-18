@@ -64,15 +64,26 @@ public class MainHW2 {
 		giniTree.buildClassifier(trainingCancer);
 		double giniError = giniTree.calcAvgError(validationCancer);
 		double entropyError = entropyTree.calcAvgError(validationCancer);
-		DecisionTree mainTree = giniError > entropyError ? giniTree : entropyTree;
+		DecisionTree mainTree = giniError < entropyError ? giniTree : entropyTree;
 		System.out.println("Validation error using Entropy: " + entropyError );
-		System.out.println("Validation error using Entropy: " + giniError);
+		System.out.println("Validation error using Gini: " + giniError);
 		System.out.println("------------------------------------------------------------------");
+		double validationError;
+		double bestError = Double.MAX_VALUE;
 		for (int i = 0; i < mainTree.pIndex.length; i++) {
 			mainTree.setpValue(mainTree.pIndex[i]);
+			mainTree.buildClassifier(trainingCancer);
 			System.out.println("Decision Tree with p_value of: " + mainTree.pIndex[i]);
 			System.out.println("The training error of the decision tree is: " + mainTree.calcAvgError(trainingCancer));
-			System.out.println("Max height on validation data: " + 0);
+			validationError = mainTree.calcAvgError(validationCancer);
+			System.out.println("Max height on validation data: " + mainTree.getMaxDepth());
+			System.out.println("Average height on validation data: " + mainTree.getAverageDepth());
+//			if (validationError < bestError){
+//				bestError = validationError;
+//			}
+			System.out.println("The validation error of the decision tree is: " + validationError);
+			System.out.println("------------------------------------------------------------------");
+
 		}
 	}
 }

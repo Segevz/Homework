@@ -24,6 +24,8 @@ public class DecisionTree implements Classifier {
     private Node rootNode;
     private function impurityMeasure;
     private double pValue;
+    private int maxDepth = 0;
+    private double averageDepth;
     private final double[][] CHI_SQUARE_DISTRIBUTION = {
             //p: 1,  0.75,   0.5,  0.25,  0.05, 0.005
             {0, 0.102, 0.455, 1.323, 3.841, 7.879}, // deg 1
@@ -42,6 +44,14 @@ public class DecisionTree implements Classifier {
 
     public void setpValue(double pValue) {
         this.pValue = pValue;
+    }
+
+    public int getMaxDepth (){
+        return this.maxDepth;
+    }
+
+    public double getAverageDepth (){
+        return this.averageDepth;
     }
 
     private int returnPIndex(double pValue){
@@ -87,7 +97,7 @@ public class DecisionTree implements Classifier {
                 bestAttribute = i;
             }
         }
-        if ( pValue <= 0 ) {
+        if (pValue <= 0 ) {
             pValue = 1 ;
         }
         if (maxGain > 0 ) {//&&  {
@@ -101,20 +111,6 @@ public class DecisionTree implements Classifier {
                 makeChildren(data, current);
             }
         }
-    }
-
-    private void buildTree(Instances data) {
-        double entropyError, giniError;
-        Node rootEntropy = new Node();
-        Node rootGini = new Node();
-//		buildEntropyTree(data, rootEntropy);
-//		buildGiniTree(data, rootGini);
-        rootNode = rootEntropy;
-        entropyError = calcAvgError(data);
-        rootNode = rootGini;
-        giniError = calcAvgError(data);
-        rootNode = giniError > entropyError ? rootGini : rootEntropy;
-
     }
 
     private boolean checkDichotomy(Instances data) {
@@ -168,10 +164,6 @@ public class DecisionTree implements Classifier {
         }
     }
 
-    private double calcInformationGain(Instances data, int attributeIndex) {
-        return 0;
-    }
-
     private double calcGain(Instances data, int attributeIndex, function mode) {
         switch (mode) {
             case Gini:
@@ -194,26 +186,6 @@ public class DecisionTree implements Classifier {
 
     private double calcGini(double p) {
         return 1 - (p * p + (1 - p) * (1 - p));
-    }
-
-    private double calcGini(double p1, double p2) {
-        return 1 - (p1 * p1 + p2 * p2);
-    }
-
-    private void findBestInfoGain(Node node, Instances data) {
-        double maxGain = 0, currentGain;
-        int bestAttributeIndex = 0;
-//		double firstEntropy = calcFirstEntropy(data);
-        for (int i = 0; i < data.numAttributes() - 1; i++) {
-            //TODO: write a function for calculating entropy for root node
-//			currentGain = calcInfoGain(data, firstEntropy, i);
-//			if (currentGain > maxGain){
-//				maxGain = currentGain;
-//				bestAttributeIndex = i;
-//			}
-//		}
-//		node.attributeIndex = bestAttributeIndex;
-        }
     }
 
     private double calcInfoGain(Instances data, int indexAttribute) {
@@ -239,7 +211,6 @@ public class DecisionTree implements Classifier {
         }
         int countPositives = 0;
         for (int i = 0; i < data.size(); i++) {
-//            if (data.get(i).classAttribute().equals(data.classAttribute().value(0))) {
             if (data.get(i).stringValue(data.classAttribute()).equals(data.classAttribute().value(0))) {
                 countPositives++;
             }
@@ -247,21 +218,6 @@ public class DecisionTree implements Classifier {
         return (double) countPositives / data.size();
     }
 
-    private double calcEntropy(Instances data, String attributeValue, int attributeIndex) {
-        int dataSize = data.size();
-        int classIndex = data.classIndex();
-        Instance currentInstace;
-//        for (int i = 0; i < dataSize; i++) {
-//            currentInstace = data.get(i);
-//            if (currentInstace.stringValue(attributeIndex).equals(attributeValue)) {
-//                if (currentInstace.stringValue(classIndex).equals("recurrence-events")) {
-//                    hasCancer++;
-//                }
-//            }
-//        }
-
-        return entropyFormula(positivesRatio(data));
-    }
 
     public int countClass(Instances data) {
         int classcount = 0;
@@ -305,35 +261,29 @@ public class DecisionTree implements Classifier {
         return splitData;
     }
 
-
     @Override
     public double classifyInstance(Instance instance) {
         Node current = rootNode;
-        Instance temp = instance.copy(instance.toDoubleArray());
         try {
-            while (current != null && current.children != null && current.attributeIndex != -1 && current.children[(int) temp.value(current.attributeIndex)] != null) {
-                current = current.children[(int) temp.value(current.attributeIndex)];
-
+            while (current.children != null && current.attributeIndex != -1 && current.children[(int) instance.value(current.attributeIndex)] != null) {
+                current = current.children[(int) instance.value(current.attributeIndex)];
             }
-//            do {
-//                if (current == null) {
-//                    return 0.0;
-//                }
-//                current = current.children[(int) temp.value(current.attributeIndex)];
-////                temp.setMissing(current.parent.attributeIndex);
-//            }
-//            while (current != null && current.children != null && current.attributeIndex != -1 && current.children[(int)temp.value(current.attributeIndex)] != null);
+            if (current.depth >= maxDepth) {
+                this.maxDepth = current.depth;
+            }
+            this.averageDepth += current.depth;
+
             return current.returnValue;
+
         } catch (Exception e) {
 //            System.err.println("[classifyInstance]" + instance.value(current.));
-            System.err.println("[classifyInstance]" + temp.toString());
+//            System.err.println("[classifyInstance]" + temp.toString());
 //            System.err.println("[classifyInstance]" + current.splitAttr.toString());
             System.err.println("[classifyInstance]" + e);
         }
 //        return current.returnValue;
         return 0;
     }
-
 
     private double calcReturnValue(Instances data) {
         int counter = 0;
@@ -345,9 +295,11 @@ public class DecisionTree implements Classifier {
 
     public double calcAvgError(Instances data) {
         double countErrors = 0;
+        this.maxDepth = 0;
         for (int i = 0; i < data.size(); i++) {
             countErrors += classifyInstance(data.get(i)) == data.get(i).classValue() ? 0 : 1;
         }
+        this.averageDepth /= data.size();
         return countErrors / data.size();
     }
 
@@ -370,6 +322,18 @@ public class DecisionTree implements Classifier {
             }
         }
         return new double[] {X2, (double)countNonEmpty};
+    }
+
+    private int findMaxHeight (Node node){
+        int maxHeight = 0;
+        while (node.children != null){
+
+        }
+        return 0;
+    }
+
+    private double findAverageHeight (Node node){
+        return 0.0;
     }
 
     @Override
