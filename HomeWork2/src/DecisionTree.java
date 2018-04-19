@@ -24,8 +24,8 @@ public class DecisionTree implements Classifier {
     private Node rootNode;
     private function impurityMeasure;
     private double pValue;
-    private int maxDepth = 0;
-    private double averageDepth;
+    private int maxHeight = 0;
+    private double averageHeight;
     private final double[][] CHI_SQUARE_DISTRIBUTION = {
             //p: 1,  0.75,   0.5,  0.25,  0.05, 0.005
             {0, 0.102, 0.455, 1.323, 3.841, 7.879}, // deg 1
@@ -47,11 +47,11 @@ public class DecisionTree implements Classifier {
     }
 
     public int getMaxDepth (){
-        return this.maxDepth;
+        return this.maxHeight;
     }
 
     public double getAverageDepth (){
-        return this.averageDepth;
+        return this.averageHeight;
     }
 
     private int returnPIndex(double pValue){
@@ -81,13 +81,14 @@ public class DecisionTree implements Classifier {
 //        System.out.println(this.rootNode.children[2].children[0].parent.attributeIndex);
 //        System.out.println(this.rootNode.children[2].children[1].parent.attributeIndex);
         //printTree(rootNode, 0);
+
     }
 
     private void buildTree(Instances data, Node current) {
-        if (checkDichotomy(data) || data.numAttributes() < 2) {
+        if (checkDichotomy(data)) {
             return;
         }
-        double maxGain = 0, currentGain;
+        double maxGain = -1, currentGain;
         int bestAttribute = -1;
         for (int i = 0; i < data.numAttributes() - 1; i++) {
             currentGain = calcGain(data, i, impurityMeasure);
@@ -102,12 +103,14 @@ public class DecisionTree implements Classifier {
         }
         if (maxGain > 0 ) {//&&  {
             double[] chiSquare = calcChiSquare(data, bestAttribute);
-            if (chiSquare[0] > CHI_SQUARE_DISTRIBUTION[(int)chiSquare[1] - 1][returnPIndex(pValue)]) {
+            if (chiSquare[0] >= CHI_SQUARE_DISTRIBUTION[(int)chiSquare[1] - 2][returnPIndex(pValue)]) {
                 current.attributeIndex = bestAttribute;
                 current.splitAttr = data.attribute(bestAttribute);
 //            System.out.println("best attribute is " + data.attribute(bestAttribute).toString());
                 //        System.out.println("**************************************");
                 //        System.out.println("**************************************");
+//                System.out.println("depth is " + current.depth);
+//                System.out.println("best attribute is " + bestAttribute);
                 makeChildren(data, current);
             }
         }
@@ -129,16 +132,27 @@ public class DecisionTree implements Classifier {
         return true;
     }
 
-    public void printTree(Node node, int n) {
+    public void printTree(){
+        printTree(rootNode, 0);
+    }
+
+    private void printTree(Node node, int n) {
         String spacer = "";
         for (int i = 0; i < n; i++) {
-            spacer += "  ";
+            spacer += "    ";
         }
-        System.out.println(spacer + "Returning value: " + node.returnValue);
+        System.out.print(spacer);
+        if (node.parent == null) {
+            System.out.print("Root ");
+        }
+        if (node.children == null) {
+            System.out.print("Leaf ");
+        }
+        System.out.println("Returning value: " + node.returnValue);
         if (node.children != null) {
             for (int i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
-                    System.out.println(spacer + "If attribute" + node.attributeIndex + " = " + i);
+                    System.out.println(spacer + "If attribute " + node.attributeIndex + " = " + i);
                     printTree(node.children[i], n+1);
                 }
             }
@@ -146,6 +160,7 @@ public class DecisionTree implements Classifier {
     }
 
     private void makeChildren(Instances data, Node parent) {
+        int counter = 0;
         if (parent.attributeIndex == -1) {
             return;
         }
@@ -160,8 +175,10 @@ public class DecisionTree implements Classifier {
                 parent.children[i].depth = parent.depth + 1;
 //                subsetsByAttribute[i].deleteAttributeAt(parent.attributeIndex);
                 buildTree(subsetsByAttribute[i], parent.children[i]);
+                counter++;
             }
         }
+//        System.out.println("node has " + counter + " children");
     }
 
     private double calcGain(Instances data, int attributeIndex, function mode) {
@@ -211,7 +228,7 @@ public class DecisionTree implements Classifier {
         }
         int countPositives = 0;
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).stringValue(data.classAttribute()).equals(data.classAttribute().value(0))) {
+            if (data.get(i).classValue() == 0) {
                 countPositives++;
             }
         }
@@ -264,14 +281,16 @@ public class DecisionTree implements Classifier {
     @Override
     public double classifyInstance(Instance instance) {
         Node current = rootNode;
+        int height = 0;
         try {
             while (current.children != null && current.attributeIndex != -1 && current.children[(int) instance.value(current.attributeIndex)] != null) {
                 current = current.children[(int) instance.value(current.attributeIndex)];
+                height++;
             }
-            if (current.depth >= maxDepth) {
-                this.maxDepth = current.depth;
+            if (height > maxHeight) {
+                this.maxHeight = height;
             }
-            this.averageDepth += current.depth;
+            this.averageHeight += height;
 
             return current.returnValue;
 
@@ -290,16 +309,17 @@ public class DecisionTree implements Classifier {
         for (int i = 0; i < data.size(); i++) {
             counter += data.get(i).classValue() * 2 - 1;
         }
-        return counter > 0 ? 1 : 0;
+        return counter >= 0 ? 1 : 0;
     }
 
     public double calcAvgError(Instances data) {
         double countErrors = 0;
-        this.maxDepth = 0;
+        this.maxHeight = 0;
+        this.averageHeight = 0;
         for (int i = 0; i < data.size(); i++) {
             countErrors += classifyInstance(data.get(i)) == data.get(i).classValue() ? 0 : 1;
         }
-        this.averageDepth /= data.size();
+        this.averageHeight = averageHeight / data.size();
         return countErrors / data.size();
     }
 

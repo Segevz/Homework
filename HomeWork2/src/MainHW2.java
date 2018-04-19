@@ -69,21 +69,29 @@ public class MainHW2 {
 		System.out.println("Validation error using Gini: " + giniError);
 		System.out.println("------------------------------------------------------------------");
 		double validationError;
+//		mainTree.printTree();
 		double bestError = Double.MAX_VALUE;
+		double bestPValue = 0;
 		for (int i = 0; i < mainTree.pIndex.length; i++) {
 			mainTree.setpValue(mainTree.pIndex[i]);
 			mainTree.buildClassifier(trainingCancer);
 			System.out.println("Decision Tree with p_value of: " + mainTree.pIndex[i]);
 			System.out.println("The training error of the decision tree is: " + mainTree.calcAvgError(trainingCancer));
 			validationError = mainTree.calcAvgError(validationCancer);
-			System.out.println("Max height on validation data: " + mainTree.getMaxDepth());
+			System.out.println("Max height on validation data: " + (mainTree.getMaxDepth()));
 			System.out.println("Average height on validation data: " + mainTree.getAverageDepth());
-//			if (validationError < bestError){
-//				bestError = validationError;
-//			}
+			if (validationError < bestError){
+				bestError = validationError;
+				bestPValue = mainTree.pIndex[i];
+			}
 			System.out.println("The validation error of the decision tree is: " + validationError);
 			System.out.println("------------------------------------------------------------------");
-
 		}
+		System.out.println("Best valdiation error at p_value = " + bestPValue);
+		mainTree.setpValue(bestPValue);
+		mainTree.buildClassifier(trainingCancer);
+		System.out.println("Test error with best tree: " + mainTree.calcAvgError(testingCancer));
+		System.out.println("------------------------------------------------------------------");
+		mainTree.printTree();
 	}
 }
