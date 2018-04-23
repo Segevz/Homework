@@ -22,8 +22,8 @@
       <file leaf-file-name="FeatureScaler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/HomeWork3/FeatureScaler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            <state relative-caret-position="600">
+              <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -31,21 +31,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Knn.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Knn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/HomeWork3/Knn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-12">
-              <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-              <folding />
+            <state relative-caret-position="1075">
+              <caret line="102" column="0" lean-forward="true" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3069#3070#0" expanded="true" />
+                <element signature="e#3440#3441#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainHW3.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainHW3.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/HomeWork3/MainHW3.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="12" column="34" lean-forward="false" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
+            <state relative-caret-position="425">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -56,6 +60,14 @@
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
       <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/HomeWork3/FeatureScaler.java" />
+        <option value="$PROJECT_DIR$/src/HomeWork3/Knn.java" />
+      </list>
     </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
@@ -540,12 +552,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1524490708351</updated>
-      <workItem from="1524490712169" duration="149000" />
+      <workItem from="1524490712169" duration="4292000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149000" />
+    <option name="totallyTimeSpent" value="4292000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="2902" height="1582" extended-state="6" />
@@ -592,10 +604,18 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/HomeWork3/MainHW3.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/HomeWork3/FeatureScaler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="600">
+          <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -604,17 +624,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/HomeWork3/Knn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-12">
-          <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/HomeWork3/MainHW3.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="12" column="34" lean-forward="false" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="34" />
-          <folding />
+        <state relative-caret-position="1075">
+          <caret line="102" column="0" lean-forward="true" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3069#3070#0" expanded="true" />
+            <element signature="e#3440#3441#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

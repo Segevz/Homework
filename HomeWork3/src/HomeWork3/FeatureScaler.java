@@ -2,6 +2,9 @@ package HomeWork3;
 
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Normalize;
+import weka.filters.unsupervised.attribute.Standardize;
 
 public class FeatureScaler {
 	/**
@@ -9,7 +12,15 @@ public class FeatureScaler {
 	 * @param instances The original dataset.
 	 * @return A scaled instances object.
 	 */
-	public Instances scaleData(Instances instances) {
-		return null;
+	public Instances scaleData(Instances instances) throws Exception {
+		Normalize normalize = new Normalize();
+//		Standardize standardize = new Standardize();
+		Filter standardize = new Standardize();
+		//can throw an exception
+//		normalize.setInputFormat(instances);
+		standardize.setInputFormat(instances);
+		instances = Filter.useFilter(instances,standardize);
+
+		return instances;
 	}
 }
