@@ -4,13 +4,18 @@ import weka.classifiers.Classifier;
 import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.Queue;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 class DistanceCalculator {
     /**
      * We leave it up to you wheter you want the distance method to get all relevant
      * parameters(lp, efficient, etc..) or have it has a class variables.
      */
-    public double distance(Instance one, Instance two) {
+    public static double distance(Instance one, Instance two) {
 
         return 0.0;
     }
@@ -80,6 +85,7 @@ public class Knn implements Classifier {
 
     private Instances m_trainingInstances;
     private int p;
+    private int k;
 
     @Override
     /**
@@ -88,7 +94,7 @@ public class Knn implements Classifier {
      * @param instances
      */
     public void buildClassifier(Instances instances) throws Exception {
-
+        m_trainingInstances = instances;
     }
 
     /**
@@ -98,8 +104,14 @@ public class Knn implements Classifier {
      * @return The instance predicted value.
      */
     public double regressionPrediction(Instance instance) {
-
-        return 0.0;
+        Collection nearest = findNearestNeighbors(instance);
+        double result = getWeightedAverageValue(nearest);
+        double divider = 0;
+        Instance current;
+        for (Iterator iteraor : nearest){
+            divider += DistanceCalculator.distance(instance, iteraor.next());
+        }
+        return result/divider;
     }
 
     /**
@@ -176,8 +188,8 @@ public class Knn implements Classifier {
      *
      * @param instance
      */
-    public /* Collection of your choice */ findNearestNeighbors(Instance instance) {
-
+    public Collection/* Collection of your choice */ findNearestNeighbors(Instance instance) {
+        return null;
     }
 
     /**
