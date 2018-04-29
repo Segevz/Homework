@@ -21,7 +21,7 @@ class DistanceCalculator {
      * @param one
      * @param two
      */
-    private double lpDisatnce(Instance one, Instance two, int p) {
+    private double lpDistance(Instance one, Instance two, int p) {
         //TODO: Check whether we should run on all attributes, or ignore last.
         double distance = 0;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
@@ -98,6 +98,7 @@ public class Knn implements Classifier {
      * @return The instance predicted value.
      */
     public double regressionPrediction(Instance instance) {
+
         return 0.0;
     }
 
@@ -106,24 +107,70 @@ public class Knn implements Classifier {
      * The average error is the average absolute error between the target value and the predicted
      * value across all insatnces.
      *
-     * @param insatnces
+     * @param instances
      * @return
      */
-    public double calcAvgError(Instances insatnces) {
-        return 0.0;
+    public double calcAvgError(Instances instances) {
+        double avgError = 0;
+        double instancePrediction;
+        int totalInstances = instances.size();
+        Instance currentInstance;
+
+        for (int i = 0; i < totalInstances; i++) {
+            currentInstance = instances.get(i);
+            instancePrediction = regressionPrediction(currentInstance);
+            avgError += Math.abs(instancePrediction - currentInstance.classValue());
+        }
+        avgError = avgError / totalInstances;
+        return avgError;
     }
 
     /**
      * Calculates the cross validation error, the average error on all folds.
      *
-     * @param insances     Insances used for the cross validation
+     * @param Instances    Instances used for the cross validation
      * @param num_of_folds The number of folds to use.
      * @return The cross validation error.
      */
-    public double crossValidationError(Instances insances, int num_of_folds) {
+    public double crossValidationError(Instances Instances, int num_of_folds) {
+        double minAvgError = Double.MAX_VALUE;
+        Instances[] splittedData = splitData(Instances, num_of_folds);
+        for (int i = 0; i < splittedData.length; i++) {
+            m_trainingInstances = mergeData(splittedData, i);
+
+        }
+
         return 0.0;
     }
 
+    public Instances mergeData(Instances[] splittedData, int indexToIgnore) {
+        Instances mergedData = new Instances(splittedData[0], 0, 0);
+        for (int i = 0; i < splittedData.length; i++) {
+            if (i != indexToIgnore) {
+                addSubsetInstances(mergedData, splittedData[i]);
+            }
+        }
+        return mergedData;
+    }
+
+    public void addSubsetInstances(Instances instances, Instances splittedData) {
+        for (int i = 0; i < splittedData.size(); i++) {
+            instances.add(splittedData.get(i));
+        }
+    }
+
+    public Instances[] splitData(Instances instances, int num_of_folds) {
+        int sizeOfEachSubset = instances.size() / num_of_folds;
+        Instances[] splittedData = new Instances[num_of_folds];
+
+        for (int i = 0; i < splittedData.length; i++) {
+            splittedData[i] = new Instances(instances, 0, 0);
+        }
+        for (int i = 0; i < instances.size(); i++) {
+            splittedData[i].add(instances.get(i % num_of_folds));
+        }
+        return splittedData;
+    }
 
     /**
      * Finds the k nearest neighbors.

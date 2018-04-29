@@ -12,7 +12,7 @@ public class FeatureScaler {
 	 * @param instances The original dataset.
 	 * @return A scaled instances object.
 	 */
-	public Instances scaleData(Instances instances) throws Exception {
+	public static Instances scaleData(Instances instances) throws Exception {
 		Normalize normalize = new Normalize();
 //		Standardize standardize = new Standardize();
 		Filter standardize = new Standardize();

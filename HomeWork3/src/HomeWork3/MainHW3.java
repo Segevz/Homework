@@ -9,6 +9,7 @@ import weka.core.Instances;
 
 public class MainHW3 {
 
+
 	public static BufferedReader readDataFile(String filename) {
 		BufferedReader inputReader = null;
 
@@ -30,6 +31,21 @@ public class MainHW3 {
 
 	public static void main(String[] args) throws Exception {
         //TODO: complete the Main method
+		int [] k_values = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int [] Lp_distance = {1,2,3, Integer.MAX_VALUE};
+		String [] weighting_scheme = {"uniform", "weighted"};
+
+		Instances data = loadData("auto_price.txt");
+		data = FeatureScaler.scaleData(data);
+
+		for (int i = 0; i < k_values.length; i++) {
+			for (int j = 0; j < Lp_distance.length; j++) {
+				for (int k = 0; k < weighting_scheme.length; k++) {
+
+				}
+			}
+		}
+
 	}
 
 }
