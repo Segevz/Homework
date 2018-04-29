@@ -133,14 +133,13 @@ public class Knn implements Classifier {
      * @return The cross validation error.
      */
     public double crossValidationError(Instances Instances, int num_of_folds) {
-        double minAvgError = Double.MAX_VALUE;
+        double avgError = 0;
         Instances[] splittedData = splitData(Instances, num_of_folds);
         for (int i = 0; i < splittedData.length; i++) {
             m_trainingInstances = mergeData(splittedData, i);
-
+            avgError += calcAvgError(splittedData[i]);
         }
-
-        return 0.0;
+        return avgError / num_of_folds;
     }
 
     public Instances mergeData(Instances[] splittedData, int indexToIgnore) {
@@ -174,11 +173,12 @@ public class Knn implements Classifier {
 
     /**
      * Finds the k nearest neighbors.
+     *
      * @param instance
      */
-//    public /* Collection of your choice */ findNearestNeighbors(Instance instance) {
-//
-//    }
+    public /* Collection of your choice */ findNearestNeighbors(Instance instance) {
+
+    }
 
     /**
      * Cacluates the average value of the given elements in the collection.
