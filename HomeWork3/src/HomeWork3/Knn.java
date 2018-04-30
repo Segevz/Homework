@@ -1,14 +1,13 @@
 package HomeWork3;
 
+import javafx.util.Pair;
 import weka.classifiers.Classifier;
 import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.Queue;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 class DistanceCalculator {
     /**
@@ -86,6 +85,8 @@ public class Knn implements Classifier {
     private Instances m_trainingInstances;
     private int p;
     private int k;
+    private int lp;
+    private DistanceCheck distanceMethod;
 
     @Override
     /**
@@ -104,14 +105,8 @@ public class Knn implements Classifier {
      * @return The instance predicted value.
      */
     public double regressionPrediction(Instance instance) {
-        Collection nearest = findNearestNeighbors(instance);
-        double result = getWeightedAverageValue(nearest);
-        double divider = 0;
-        Instance current;
-        for (Iterator iteraor : nearest){
-            divider += DistanceCalculator.distance(instance, iteraor.next());
-        }
-        return result/divider;
+        PriorityQueue<Pair<Double, Double>> nearest = findNearestNeighbors(instance);
+        return getWeightedAverageValue(nearest);
     }
 
     /**
@@ -188,8 +183,23 @@ public class Knn implements Classifier {
      *
      * @param instance
      */
-    public Collection/* Collection of your choice */ findNearestNeighbors(Instance instance) {
-        return null;
+    public PriorityQueue<Pair<Double, Double>> findNearestNeighbors(Instance instance) {
+        Pair<Double, Double> pair;
+        Comparator<Pair<Double, Double>> comp = (o1, o2) -> (o1.getKey() - o2.getKey() > 0 ? 1 : -1);
+        PriorityQueue<Pair<Double, Double>> heap = new PriorityQueue(this.k, comp);
+        Instance current;
+        for (int j = 0; j < this.k; j++) {
+
+            heap.add(new Pair(DistanceCalculator.distance(instance, m_trainingInstances.get(j)), m_trainingInstances));
+        }
+        for (int i = this.k; i < m_trainingInstances.size(); i++) {
+            pair = new Pair<Double, Double>(DistanceCalculator.distance(instance, m_trainingInstances.get(i)), m_trainingInstances.get(i).classValue());
+            if (comp.compare(heap.peek(), pair) < 0) {
+                heap.poll();
+                heap.add(pair);
+            }
+        }
+        return heap;
     }
 
     /**
@@ -198,8 +208,13 @@ public class Knn implements Classifier {
      * @param
      * @return
      */
-    public double getAverageValue(/* Collection of your choice */) {
-        return 0.0;
+    public double getAverageValue(PriorityQueue<Pair<Double, Double>> Heap) {
+        double result = 0;
+        int size = Heap.size();
+        while (Heap.size() > 0){
+            result += Heap.poll().getValue();
+        }
+        return result/size;
     }
 
     /**
@@ -208,8 +223,23 @@ public class Knn implements Classifier {
      *
      * @return
      */
-    public double getWeightedAverageValue(/* Collection of your choice */) {
-        return 0.0;
+    public double getWeightedAverageValue(PriorityQueue<Pair<Double, Double>> Heap) {
+        double wi;
+        double result = 0;
+        int size = Heap.size();
+        Pair<Double, Double> current;
+        double dividor = 0;
+        while (Heap.size() > 0){
+            current = Heap.poll();
+            if (current.getKey() != 0){
+                wi = 1/Math.pow(current.getKey(), 2);
+            }else {
+                wi = Math.pow(10, -10);
+            }
+            result += current.getValue()*wi;
+            dividor += wi;
+        }
+        return result/dividor;
     }
 
 
