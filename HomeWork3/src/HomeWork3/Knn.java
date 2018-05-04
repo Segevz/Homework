@@ -75,7 +75,7 @@ class DistanceCalculator {
         double distance = 0;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
             distance += Math.pow( Math.abs(one.value(i) - two.value(i)), p);
-            if (distance > thershold) {
+            if (distance > Math.pow(thershold, p)) {
                 return Double.MAX_VALUE;
             }
         }
