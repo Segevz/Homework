@@ -14,7 +14,7 @@ class DistanceCalculator {
      * We leave it up to you wheter you want the distance method to get all relevant
      * parameters(lp, efficient, etc..) or have it has a class variables.
      */
-    public double distance(Instance one, Instance two, int p, Knn.DistanceCheck distanceMethod) {
+    public static double distance(Instance one, Instance two, int p, Knn.DistanceCheck distanceMethod) {
         if (p < Integer.MAX_VALUE) {
             if (distanceMethod == Knn.DistanceCheck.Regular) {
                 return lpDistance(one, two, p);
@@ -38,11 +38,11 @@ class DistanceCalculator {
      * @param one
      * @param two
      */
-    private double lpDistance(Instance one, Instance two, int p) {
+    private static double lpDistance(Instance one, Instance two, int p) {
         //TODO: Check whether we should run on all attributes, or ignore last.
         double distance = 0;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
-            distance += Math.pow(one.value(i) - one.value(i), p);
+            distance += Math.pow( Math.abs(one.value(i) - two.value(i)), p);
         }
         distance = Math.pow(distance, 1.0 / p);
         return distance;
@@ -55,14 +55,12 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double lpInfinityDistance(Instance one, Instance two) {
+    private static double lpInfinityDistance(Instance one, Instance two) {
         double maxDistance = 0;
         double currentDistance;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
             currentDistance = Math.abs(one.value(i) - two.value(i));
-//            if (currentDistance > maxDistance){
-//                maxDistance = currentDistance;
-//            }
+
             maxDistance = currentDistance > maxDistance ? currentDistance : maxDistance;
         }
         return maxDistance;
@@ -75,7 +73,7 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double efficientLpDisatnce(Instance one, Instance two, int p, double thershold) {
+    private static double efficientLpDisatnce(Instance one, Instance two, int p, double thershold) {
         return 0.0;
     }
 
@@ -97,11 +95,13 @@ public class Knn implements Classifier {
 
 
     public enum DistanceCheck {Regular, Efficient}
+    public enum WeightingScheme {Uniform, Weighted}
 
     private Instances m_trainingInstances;
     private int k;
     private int lp;
     private DistanceCheck distanceMethod;
+    private WeightingScheme scheme;
 
     public void setK(int k) {
         this.k = k;
@@ -109,6 +109,14 @@ public class Knn implements Classifier {
 
     public void setLp(int lp) {
         this.lp = lp;
+    }
+
+    public void setDistanceMethod (DistanceCheck distanceMethod){
+        this.distanceMethod = distanceMethod;
+    }
+
+    public void setWeightingScheme (WeightingScheme scheme){
+        this.scheme = scheme;
     }
 
     @Override
@@ -129,7 +137,8 @@ public class Knn implements Classifier {
      */
     public double regressionPrediction(Instance instance) {
         PriorityQueue<Pair<Double, Double>> nearest = findNearestNeighbors(instance);
-        return
+
+        return this.scheme == WeightingScheme.Uniform ? getAverageValue(nearest) : getWeightedAverageValue(nearest);
     }
 
     /**
@@ -158,17 +167,18 @@ public class Knn implements Classifier {
     /**
      * Calculates the cross validation error, the average error on all folds.
      *
-     * @param Instances    Instances used for the cross validation
+     * @param instances    Instances used for the cross validation
      * @param num_of_folds The number of folds to use.
      * @return The cross validation error.
      */
-    public double crossValidationError(Instances Instances, int num_of_folds) {
+    public double crossValidationError(Instances instances, int num_of_folds) {
         double avgError = 0;
-        Instances[] splittedData = splitData(Instances, num_of_folds);
+        Instances[] splittedData = splitData(instances, num_of_folds);
         for (int i = 0; i < splittedData.length; i++) {
             m_trainingInstances = mergeData(splittedData, i);
             avgError += calcAvgError(splittedData[i]);
         }
+        this.m_trainingInstances = instances;
         return avgError / num_of_folds;
     }
 
@@ -196,7 +206,7 @@ public class Knn implements Classifier {
             splittedData[i] = new Instances(instances, 0, 0);
         }
         for (int i = 0; i < instances.size(); i++) {
-            splittedData[i].add(instances.get(i % num_of_folds));
+            splittedData[i % num_of_folds].add(instances.get(i));
         }
         return splittedData;
     }
@@ -208,16 +218,16 @@ public class Knn implements Classifier {
      */
     public PriorityQueue<Pair<Double, Double>> findNearestNeighbors(Instance instance) {
         Pair<Double, Double> pair;
-        Comparator<Pair<Double, Double>> comp = (o1, o2) -> (o1.getKey() - o2.getKey() > 0 ? 1 : -1);
+        Comparator<Pair<Double, Double>> comp = (o1, o2) -> (int)(o2.getKey() - o1.getKey());
         PriorityQueue<Pair<Double, Double>> heap = new PriorityQueue(this.k, comp);
         Instance current;
         for (int j = 0; j < this.k; j++) {
-
-            heap.add(new Pair(DistanceCalculator.distance(instance, m_trainingInstances.get(j)), m_trainingInstances));
+            current = m_trainingInstances.get(j);
+            heap.add(new Pair(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod), current.classValue()));
         }
         for (int i = this.k; i < m_trainingInstances.size(); i++) {
-            pair = new Pair<Double, Double>(DistanceCalculator.distance(instance, m_trainingInstances.get(i)),
-                    m_trainingInstances.get(i).classValue());
+            current = m_trainingInstances.get(i);
+            pair = new Pair<>(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod), current.classValue());
             if (comp.compare(heap.peek(), pair) < 0) {
                 heap.poll();
                 heap.add(pair);
@@ -238,7 +248,8 @@ public class Knn implements Classifier {
         while (Heap.size() > 0){
             result += Heap.poll().getValue();
         }
-        return result/size;
+        result = result/size;
+        return result;
     }
 
     /**
@@ -256,14 +267,16 @@ public class Knn implements Classifier {
         while (Heap.size() > 0){
             current = Heap.poll();
             if (current.getKey() != 0){
-                wi = 1/Math.pow(current.getKey(), 2);
+                wi = 1.0/Math.pow(current.getKey(), 2);
             }else {
-                wi = Math.pow(10, -10);
+                wi = Math.pow(10,-10);
             }
             result += current.getValue()*wi;
             dividor += wi;
         }
-        return result/dividor;
+
+        result = result/dividor;
+        return result;
     }
 
 
