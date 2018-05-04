@@ -14,22 +14,21 @@ class DistanceCalculator {
      * We leave it up to you wheter you want the distance method to get all relevant
      * parameters(lp, efficient, etc..) or have it has a class variables.
      */
-    public static double distance(Instance one, Instance two, int p, Knn.DistanceCheck distanceMethod) {
+    public static double distance(Instance one, Instance two, int p, Knn.DistanceCheck distanceMethod, double threshold) {
         if (p < Integer.MAX_VALUE) {
             if (distanceMethod == Knn.DistanceCheck.Regular) {
                 return lpDistance(one, two, p);
             }else {
-//                return efficientLpDisatnce(one, two, p);
+                return efficientLpDisatnce(one, two, p, threshold);
             }
         } else {
             if (distanceMethod == Knn.DistanceCheck.Regular){
                 return lpInfinityDistance(one, two);
             }else {
-//                return efficientLInfinityDistance(one, two);
+                return efficientLInfinityDistance(one, two, threshold);
             }
 
         }
-        return 0.0;
     }
 
     /**
@@ -60,7 +59,6 @@ class DistanceCalculator {
         double currentDistance;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
             currentDistance = Math.abs(one.value(i) - two.value(i));
-
             maxDistance = currentDistance > maxDistance ? currentDistance : maxDistance;
         }
         return maxDistance;
@@ -74,7 +72,15 @@ class DistanceCalculator {
      * @return
      */
     private static double efficientLpDisatnce(Instance one, Instance two, int p, double thershold) {
-        return 0.0;
+        double distance = 0;
+        for (int i = 0; i < one.numAttributes() - 1; i++) {
+            distance += Math.pow( Math.abs(one.value(i) - two.value(i)), p);
+            if (distance > thershold) {
+                return Double.MAX_VALUE;
+            }
+        }
+        distance = Math.pow(distance, 1.0 / p);
+        return distance;
     }
 
     /**
@@ -84,8 +90,17 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double efficientLInfinityDistance(Instance one, Instance two, double thershold) {
-        return 0.0;
+    private static double efficientLInfinityDistance(Instance one, Instance two, double thershold) {
+        double maxDistance = 0;
+        double currentDistance;
+        for (int i = 0; i < one.numAttributes() - 1; i++) {
+            currentDistance = Math.abs(one.value(i) - two.value(i));
+            maxDistance = currentDistance > maxDistance ? currentDistance : maxDistance;
+            if (maxDistance > thershold) {
+                return Double.MAX_VALUE;
+            }
+        }
+        return maxDistance;
     }
 }
 
@@ -223,11 +238,11 @@ public class Knn implements Classifier {
         Instance current;
         for (int j = 0; j < this.k; j++) {
             current = m_trainingInstances.get(j);
-            heap.add(new Pair(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod), current.classValue()));
+            heap.add(new Pair(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod, Double.MAX_VALUE), current.classValue()));
         }
         for (int i = this.k; i < m_trainingInstances.size(); i++) {
             current = m_trainingInstances.get(i);
-            pair = new Pair<>(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod), current.classValue());
+            pair = new Pair<>(DistanceCalculator.distance(instance, current, this.lp, this.distanceMethod, heap.peek().getKey()), current.classValue());
             if (comp.compare(heap.peek(), pair) < 0) {
                 heap.poll();
                 heap.add(pair);
