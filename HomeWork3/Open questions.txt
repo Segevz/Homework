@@ -1,0 +1,9 @@
+1.	In general, why do we expect feature scaling to have a positive effect on our kNN algorithm? Would we expect to have a positive effect of feature scaling in the context of decision tree algorithms?
+
+Answer: We expect feature scaling to have a positive effect on our KNN algorithm, due to the limitation of the range (between -1 to 1 for example).
+		If we don't scale, then a spcific feature which has a broad range of possible values (for example 0-1000000), will behave as a strong mass of our calculation.
+		Therefore, that kind of feature can influence significantly on our prediction, rather than the other features, which should also be taken in count.
+
+2.	In class we saw we can perform an edited kNN algorihtm which used either backward or forward kNN to filter out instances.
+Could we use this procedure for our dataset? If so explain how, if not explain why.
+
