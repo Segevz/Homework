@@ -53,29 +53,34 @@ public class MainHW3 {
         int bestLP = 0;
         Knn.WeightingScheme majorityFunction = null;
         knn.setDistanceMethod(Knn.DistanceCheck.Efficient);
-
-        for (int i = 1; i < k_values.length; i++) {
-            knn.setK(k_values[i]);
-            for (int j = 0; j < Lp_distance.length; j++) {
-                knn.setLp(Lp_distance[j]);
-                for (int k = 0; k < schemes.length; k++) {
-                    knn.setWeightingScheme(schemes[k]);
-
-                    currentError = knn.crossValidationError(scaledData, XFolds);
-                    if (currentError < bestError) {
-                        bestError = currentError;
-                        bestK = k_values[i];
-                        bestLP = Lp_distance[j];
-                        majorityFunction = schemes[k];
+        long totalTime = 0;
+        long startTime = 0;
+        for (int l = 0; l < x_Folds.length; l++) {
+            for (int i = 1; i < k_values.length; i++) {
+                knn.setK(k_values[i]);
+                for (int j = 0; j < Lp_distance.length; j++) {
+                    knn.setLp(Lp_distance[j]);
+                    for (int k = 0; k < schemes.length; k++) {
+                        knn.setWeightingScheme(schemes[k]);
+                        startTime = System.nanoTime();
+                        currentError = knn.crossValidationError(scaledData, x_Folds[l]);
+                        totalTime = System.nanoTime() - startTime;
+                        if (currentError < bestError) {
+                            bestError = currentError;
+                            bestK = k_values[i];
+                            bestLP = Lp_distance[j];
+                            majorityFunction = schemes[k];
+                        }
                     }
                 }
             }
+            System.out.println("--------------------------------------");
+            System.out.println("Results for " + x_Folds[l] + "folds:");
+            System.out.println("--------------------------------------");
+            System.out.println("Cross Validation error of regular knn on auto_price dataset is " + bestError);
+            System.out.println("The average elapsed time is " + totalTime / x_Folds[l]);
+            System.out.println("The total time elapsed time is " + totalTime);
         }
-        System.out.println("Best K is: " + bestK);
-        System.out.println("Best LP is: " + bestLP);
-        System.out.println("Best majorityFunction is: " + majorityFunction);
-        System.out.println("the error is " + bestError);
-
     }
 
 }
