@@ -80,6 +80,7 @@ public class MainHW3 {
         }
         System.out.println();
 
+        // Sets the values found in the previous stage in our knn algorithm
         knn.setK(bestK);
         knn.setLp(bestLP);
         knn.setWeightingScheme(majorityFunction);
