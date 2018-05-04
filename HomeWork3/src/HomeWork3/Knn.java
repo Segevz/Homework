@@ -14,8 +14,21 @@ class DistanceCalculator {
      * We leave it up to you wheter you want the distance method to get all relevant
      * parameters(lp, efficient, etc..) or have it has a class variables.
      */
-    public static double distance(Instance one, Instance two) {
+    public double distance(Instance one, Instance two, int p, Knn.DistanceCheck distanceMethod) {
+        if (p < Integer.MAX_VALUE) {
+            if (distanceMethod == Knn.DistanceCheck.Regular) {
+                return lpDistance(one, two, p);
+            }else {
+//                return efficientLpDisatnce(one, two, p);
+            }
+        } else {
+            if (distanceMethod == Knn.DistanceCheck.Regular){
+                return lpInfinityDistance(one, two);
+            }else {
+//                return efficientLInfinityDistance(one, two);
+            }
 
+        }
         return 0.0;
     }
 
@@ -42,7 +55,7 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double lInfinityDistance(Instance one, Instance two) {
+    private double lpInfinityDistance(Instance one, Instance two) {
         double maxDistance = 0;
         double currentDistance;
         for (int i = 0; i < one.numAttributes() - 1; i++) {
@@ -62,7 +75,7 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double efficientLpDisatnce(Instance one, Instance two) {
+    private double efficientLpDisatnce(Instance one, Instance two, int p, double thershold) {
         return 0.0;
     }
 
@@ -73,20 +86,30 @@ class DistanceCalculator {
      * @param two
      * @return
      */
-    private double efficientLInfinityDistance(Instance one, Instance two) {
+    private double efficientLInfinityDistance(Instance one, Instance two, double thershold) {
         return 0.0;
     }
 }
 
 public class Knn implements Classifier {
 
+
+
+
     public enum DistanceCheck {Regular, Efficient}
 
     private Instances m_trainingInstances;
-    private int p;
     private int k;
     private int lp;
     private DistanceCheck distanceMethod;
+
+    public void setK(int k) {
+        this.k = k;
+    }
+
+    public void setLp(int lp) {
+        this.lp = lp;
+    }
 
     @Override
     /**
@@ -106,7 +129,7 @@ public class Knn implements Classifier {
      */
     public double regressionPrediction(Instance instance) {
         PriorityQueue<Pair<Double, Double>> nearest = findNearestNeighbors(instance);
-        return getWeightedAverageValue(nearest);
+        return
     }
 
     /**
@@ -193,7 +216,8 @@ public class Knn implements Classifier {
             heap.add(new Pair(DistanceCalculator.distance(instance, m_trainingInstances.get(j)), m_trainingInstances));
         }
         for (int i = this.k; i < m_trainingInstances.size(); i++) {
-            pair = new Pair<Double, Double>(DistanceCalculator.distance(instance, m_trainingInstances.get(i)), m_trainingInstances.get(i).classValue());
+            pair = new Pair<Double, Double>(DistanceCalculator.distance(instance, m_trainingInstances.get(i)),
+                    m_trainingInstances.get(i).classValue());
             if (comp.compare(heap.peek(), pair) < 0) {
                 heap.poll();
                 heap.add(pair);
