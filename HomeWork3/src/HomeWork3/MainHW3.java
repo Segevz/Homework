@@ -33,7 +33,7 @@ public class MainHW3 {
         //TODO: complete the Main method
         int[] k_values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
         int[] Lp_distance = {1, 2, 3, Integer.MAX_VALUE};
-        int XFolds = 10;
+        int XFolds = 3;
 
         Knn.DistanceCheck[] distanceChecks = {Knn.DistanceCheck.Regular, Knn.DistanceCheck.Efficient};
         Knn.WeightingScheme[] schemes = {Knn.WeightingScheme.Weighted, Knn.WeightingScheme.Uniform};
@@ -52,7 +52,7 @@ public class MainHW3 {
         int bestK = 0;
         int bestLP = 0;
         Knn.WeightingScheme majorityFunction = null;
-        knn.setDistanceMethod(Knn.DistanceCheck.Regular);
+        knn.setDistanceMethod(Knn.DistanceCheck.Efficient);
 
         for (int i = 1; i < k_values.length; i++) {
             knn.setK(k_values[i]);
@@ -77,4 +77,5 @@ public class MainHW3 {
         System.out.println("the error is " + bestError);
 
     }
+
 }
