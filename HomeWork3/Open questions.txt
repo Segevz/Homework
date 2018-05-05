@@ -9,5 +9,5 @@ Answer: We could expect feature scaling to have a positive effect on kNN algorit
 Could we use this procedure for our dataset? If so explain how, if not explain why.
 
 Answer: Yes, we could use this procedure to prune our dataset, although it will have the most effectiveness on large datasets (ours is relatively small).
-		Both of them happen in the preprocessing state and will prune the dataset. for forward kNN we will start with an empty dataset and only add to our dataset the wrongly classified instances.
-		And for backward kNN we will start with the entire dataset and will remove all the instances that are correctly classified.
+		Both of them happen in the preprocessing state and will prune the dataset. For forward kNN we will start with an empty dataset and only add to our dataset the wrongly classified instances.
+		For backward kNN we will start with the entire dataset and will remove all the instances that are correctly classified.
