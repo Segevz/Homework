@@ -1,9 +1,5 @@
-
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
-
 
 
 public class Matcher extends Thread {
@@ -13,55 +9,55 @@ public class Matcher extends Thread {
     private ArrayList<Match> matches = new ArrayList<Match>();
     private int lineOffset;
 
-    public Matcher(StringBuffer currentStringBuffer, int lineOffset){
+    public Matcher(StringBuffer currentStringBuffer, int lineOffset) {
         this.stringBuffer = currentStringBuffer;
         this.lineOffset = lineOffset;
-//        run();
-
     }
 
-    public Matcher(){}
+    public Matcher() {
+    }
 
     @Override
     public void run() {
 
-            String currentWord;
-            System.out.println(Thread.currentThread().getName());
-            for (int i = 0; i < wordsToFind.length; i++) {
-                currentWord = wordsToFind[i];
-                Pattern p = Pattern.compile(currentWord);//, Pattern.CASE_INSENSITIVE);
-                java.util.regex.Matcher m = p.matcher(stringBuffer);
-                // indicate all matches in the text
-                while (m.find()) {
-                    matches.add(new Match(currentWord,m.start(),lineOffset));
-                }
+        String currentWord;
+        System.out.println(Thread.currentThread().getName());
+        for (int i = 0; i < wordsToFind.length; i++) {
+            currentWord = wordsToFind[i];
+            Pattern p = Pattern.compile(currentWord);//, Pattern.CASE_INSENSITIVE);
+            java.util.regex.Matcher m = p.matcher(stringBuffer);
+            // indicate all matches in the text
+            while (m.find()) {
+                matches.add(new Match(currentWord, m.start(), lineOffset));
             }
+        }
     }
 
 
-    public void addMatch (Match match){
+    public void addMatch(Match match) {
         matches.add(match);
     }
+
     public ArrayList<Match> getMatches() {
         return this.matches;
     }
 
-    public int getLineOffset () {
+    public int getLineOffset() {
         return this.lineOffset;
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        if (!matches.isEmpty()){
+        if (!matches.isEmpty()) {
             s.append(matches.get(0).getWord());
-            s.append("("+matches.size()+")");
+            s.append("(" + matches.size() + ")");
             s.append("--> [");
-            for (Match match:matches) {
-                s.append("[lineOffSet="+ match.getLineOffset() + ", charOffSet=" + match.getLocation()+"]");
+            for (Match match : matches) {
+                s.append("[lineOffSet=" + match.getLineOffset() + ", charOffSet=" + match.getLocation() + "]");
             }
             s.append("]");
-            return s.toString()+ "\n";
+            return s.toString() + "\n";
         }
         return "";
     }
