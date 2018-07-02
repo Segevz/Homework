@@ -1,9 +1,4 @@
-import javax.xml.soap.Text;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -11,44 +6,50 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class TextParser {
 
     public static final int MAX_AMOUNT_OF_THREADS = 5;
+    public static final int LINES_TO_READ = 1000;
 
     private Aggregator aggregator;
     private Scanner scanner;
+    private final String[] wordsToFind;
 
     public void runWordFinder() {
-
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_AMOUNT_OF_THREADS);
-
         String currentLine;
         StringBuffer stringBuffer;
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_AMOUNT_OF_THREADS);
 
         //Skips first 2000 rows
         for (int i = 0; i < 2000; i++) {
             scanner.nextLine();
         }
-        int count = 1;
+        int bulkCounter = 1;
         while (scanner.hasNext()) {
-
             stringBuffer = new StringBuffer();
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < LINES_TO_READ; i++) {
                 if (!scanner.hasNext())
                     break;
                 currentLine = scanner.nextLine();
                 stringBuffer.append(currentLine);
             }
-            count++;
-            Matcher m = new Matcher(stringBuffer, count * 1000);
+
+            bulkCounter++;
+            Matcher m = new Matcher(stringBuffer, bulkCounter * LINES_TO_READ, wordsToFind);
             executor.execute(m);
             aggregator.AddMatcher(m);
         }
+
         executor.shutdown();
         aggregator.populateMatchersArray();
 
         System.out.println(aggregator);
     }
 
-    public TextParser(URL url) throws Exception {
-        this.aggregator = new Aggregator();
+    public TextParser(URL url, String[] wordsToFind) throws Exception {
+        this.aggregator = new Aggregator(wordsToFind);
         this.scanner = new Scanner(url.openStream());
+        this.wordsToFind = wordsToFind;
+    }
+
+    public String[] getWordsToFind() {
+        return this.wordsToFind;
     }
 }

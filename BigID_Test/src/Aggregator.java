@@ -3,16 +3,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Aggregator {
-    private ArrayList<Matcher> allMatchers = new ArrayList<Matcher>();
-    private Matcher[] allMatchesInFile;
-    private static String[] wordsToFind = {"James", "John", "Robert", "Michael", "William", "David", "Richard", "Charles", "Joseph", "Thomas", "Christopher", "Daniel", "Paul", "Mark", "Donald", "George", "Kenneth", "Steven", "Edward", "Brian", "Ronald", "Anthony", "Kevin", "Jason", "Matthew", "Gary", "Timothy", "Jose", "Larry", "Jeffrey", "Frank", "Scott", "Eric", "Stephen", "Andrew", "Raymond", "Gregory", "Joshua", "Jerry", "Dennis", "Walter", "Patrick", "Peter", "Harold", "Douglas", "Henry", "Carl", "Arthur", "Ryan", "Roger"};
+    private ArrayList<Matcher> allMatchers;
+    private ArrayList<Match>[] allMatchesListByWord;
+    private String[] wordsToFind;
     private Map<String, Integer> dictionary = new HashMap<String, Integer>();
 
-    public Aggregator() {
+    public Aggregator(String[] wordsToFind) {
         allMatchers = new ArrayList<Matcher>();
+        this.wordsToFind = wordsToFind;
         buildDictionary();
         buildCleanMatchersArray();
-
     }
 
     private void buildDictionary() {
@@ -22,9 +22,9 @@ public class Aggregator {
     }
 
     public void buildCleanMatchersArray() {
-        allMatchesInFile = new Matcher[dictionary.size()];
-        for (int i = 0; i < allMatchesInFile.length; i++) {
-            allMatchesInFile[i] = new Matcher();
+        allMatchesListByWord = new ArrayList[dictionary.size()];
+        for (int i = 0; i < allMatchesListByWord.length; i++) {
+            allMatchesListByWord[i] = new ArrayList<Match>();
         }
     }
 
@@ -33,7 +33,7 @@ public class Aggregator {
         for (Matcher matcher : allMatchers) {
             for (Match match : matcher.getMatches()) {
                 index = dictionary.get(match.getWord());
-                allMatchesInFile[index].addMatch(match);
+                allMatchesListByWord[index].add(match);
             }
         }
     }
@@ -42,15 +42,19 @@ public class Aggregator {
         this.allMatchers.add(matcher);
     }
 
-    public ArrayList<Matcher> getAllMatchers() {
-        return this.allMatchers;
-    }
-
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        for (Matcher matcher : allMatchesInFile) {
-            s.append(matcher);
+        for (ArrayList<Match> list : allMatchesListByWord) {
+            if (list.size() > 0) {
+                s.append(list.get(0).getWord() + "--> [");
+                for (int i = 0; i < list.size() - 1; i++) {
+                    s.append(list.get(i) + ",");
+                }
+                //Add last match to StringBuilder (without ",")
+                s.append(list.get(list.size() - 1));
+                s.append("]\n");
+            }
         }
         return s.toString();
     }

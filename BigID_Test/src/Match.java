@@ -1,5 +1,3 @@
-
-
 public class Match {
 
     private String word;
@@ -26,6 +24,6 @@ public class Match {
 
     @Override
     public String toString() {
-        return "(" + word + ", LineOffset: " + lineOffset + ", charOffset: " + location + ")";
+        return "[LineOffset: " + lineOffset + ", charOffset: " + location + "]";
     }
 }
